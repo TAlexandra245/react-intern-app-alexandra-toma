@@ -1,83 +1,114 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 
-import { currentEnvironment } from '@constants';
+import {currentEnvironment} from '@constants';
 
 import styles from './users.module.scss';
+import {FETCH_STATUS} from "pages/users/fetchUserStatus";
 
 type Gender = 'female' | 'male' | '';
 
 type User = {
-  gender: Gender;
-  login: {
-    uuid: string;
-  };
-  name: {
-    first: string;
-    last: string;
-  };
+    gender: Gender;
+    login: {
+        uuid: string;
+    };
+    name: {
+        first: string;
+        last: string;
+    };
 };
 
 const Users = () => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [gender, setGender] = useState<Gender>('');
-  const [pageToGet, setPageToGet] = useState<number>(1);
+    const [users, setUsers] = useState<User[]>([]);
+    const [gender, setGender] = useState<Gender>('');
+    const [pageToGet, setPageToGet] = useState<number>(1);
+    const [status, setStatus] = useState<FETCH_STATUS>(FETCH_STATUS.IDLE);
+    const [selectedOption, setSelectedOption] = useState<Gender>('');
 
-  const getUsers = async (page: number) => {
-    const result = await fetch(
-      `${currentEnvironment.api.baseUrl}?results=5&gender=female&page=${String(page)}`,
+    const getUsers = async (page: number, gender: Gender) => {
+        try {
+            setStatus(FETCH_STATUS.LOADING);
+            const result = await fetch(
+                `${currentEnvironment.api.baseUrl}?results=5&gender=${gender}&page=${String(page)}`,
+            );
+            setStatus(FETCH_STATUS.SUCCESS);
+            const usersResults = await result.json();
+            setUsers((oldUsers) => (page === 1 ? usersResults.results : [...oldUsers, ...usersResults.results]));
+        } catch (error) {
+            setStatus(FETCH_STATUS.ERROR);
+        }
+    };
+
+    const isLoading = status === FETCH_STATUS.LOADING;
+    const isSuccess = status === FETCH_STATUS.SUCCESS;
+    const isError = status === FETCH_STATUS.ERROR;
+
+    const filterUsersByGender = users.filter(user => {
+        switch (gender) {
+            case "":
+                return user.gender;
+            case 'female':
+                return user.gender === 'female';
+            case 'male':
+                return user.gender === 'male';
+        }
+    });
+
+    useEffect(() => {
+        void (async () => {
+            await getUsers(pageToGet, gender);
+        })();
+    }, [pageToGet, gender]);
+
+    if (isLoading)
+        return <div> Loading...</div>
+
+    return (
+        <div className={styles.userPanel}>
+            <div>
+                Users
+                <select
+                    id="gender"
+                    name="gender"
+                    value={selectedOption}
+                    onChange={(event) => {
+                        setGender(event.target.value as Gender)
+                        setSelectedOption(event.target.value as Gender)
+                        setUsers([]);
+                    }}
+                >
+                    <option value="">All</option>
+                    <option value="female">Female</option>
+                    <option value="male">Male</option>
+                </select>
+            </div>
+            {isSuccess &&
+                <ul className={styles.list}>
+                    {users?.length > 0
+                        ? users?.map((user: User, index) => (
+                            <li className={styles.listItem} key={user.login.uuid}>
+                                {user.name.first}
+                                {' '}
+                                {user.name.last}
+                                {' '}
+                                {user.gender}
+                                {' '}
+                            </li>
+                        )) : null}
+                </ul>
+            }
+            {isError && (<span>Unable to fetch users. </span>)}
+            <button
+                className={styles.loadButton}
+                type="button"
+                onClick={() => {
+                    setPageToGet((v) => v + 1);
+                }}
+            >
+                Load More
+            </button>
+        </div>
     );
-    const usersResults = (await result.json()) as User[];
-
-    setUsers((oldUsers) => (page === 1 ? usersResults : [...oldUsers, ...usersResults]));
-  };
-
-  useEffect(() => {
-    void (async () => {
-      await getUsers(pageToGet);
-    })();
-  }, []);
-
-  return (
-    <div>
-      <div style={{ backgroundColor: 'grey' }}>
-        Users
-        <select
-          id="gender"
-          name="gender"
-          onChange={(event) => {
-            setGender(event.target.value as Gender);
-          }}
-        >
-          <option value="">All</option>
-          <option value="female">Female</option>
-          <option value="male">Male</option>
-        </select>
-      </div>
-      <ul>
-        {users.length > 0
-          ? users.map((user: User) => (
-            <li key={user.login.uuid}>
-              {user.name.first}
-              {' '}
-              {user.name.last}
-              {' '}
-              {user.gender}
-              {' '}
-            </li>
-          ))
-          : null}
-      </ul>
-      <button
-        className={styles.loadButton}
-        type="button"
-        onClick={() => {
-          setPageToGet((v) => v + 1);
-        }}
-      >
-        Load More
-      </button>
-    </div>
-  );
 };
 
 export default Users;

@@ -7,7 +7,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
- 
+
+}
+
+.nav-bar-item {
+  display: flex;
+  list-style-type: none;
+  gap: 20px;
+  position: relative;
+  right: 20px;
+  color: white;
+  text-decoration: none;
 }
 
 .layout-container {
@@ -16,6 +26,6 @@
 
 .logo {
   @include for-phone-only {
-    width: 50px;
+    width: 120px;
   }
 }

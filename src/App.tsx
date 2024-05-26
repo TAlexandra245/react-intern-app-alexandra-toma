@@ -10,8 +10,8 @@ const Layout = () => (
   <div className="layout-container">
     <header className="header">
       <img alt="Company Logo" className="logo" src={logo} />
-      <nav>
-        <ul>
+      <nav className = "nav-bar">
+        <ul className= "nav-bar-item">
           <li>
             <NavLink to="/">Home</NavLink>
           </li>

@@ -1,4 +1,7 @@
 module.exports = {
+  rules: {
+    'linebreak-style': ['error', 'windows'],
+  },
   env: {
     browser: false,
     es2021: false,
