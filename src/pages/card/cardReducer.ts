@@ -20,12 +20,13 @@ export interface State {
 
 export const cardReducer = (state: State, action: Action): State => {
     switch (action.type) {
-        case 'ADD_CARD':
+        case 'ADD_CARD': {
             return {
                 ...state,
                 cards: [...state.cards, action.payload as CardData]
-            };
-        case 'UPDATE_CARD':
+            }
+        }
+        case 'UPDATE_CARD': {
             const {id, updates} = action.payload as Update;
             return {
                 ...state,
@@ -39,8 +40,9 @@ export const cardReducer = (state: State, action: Action): State => {
                     return card;
                 })
             }
+        }
         case 'DELETE_CARD': {
-            const { id } = action.payload;
+            const {id} = action.payload;
             return {
                 ...state,
                 cards: state.cards.filter((card) => card.id !== id)

@@ -1,7 +1,7 @@
 import React, {FC} from "react";
 import {Action, CardData} from "pages/card/cardReducer";
 import card from "pages/card/Card";
-
+import './card.css'
 interface ExtraProps {
     handleEdit: (id: number | undefined) => void;
     dispatch: React.Dispatch<Action>;
@@ -10,7 +10,7 @@ interface ExtraProps {
 const CardItem: FC<CardData & ExtraProps> = ({id, title, description, dispatch, handleEdit}) => {
     return (
         <div style={{
-            boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', padding: '2px 16px', maxWidth: '500px'
+            boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', padding: '2px 16px', display: 'inline-block', wordBreak: 'break-all'
         }}>
             <h1>{title}</h1>
             <p> {description}</p>

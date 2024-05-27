@@ -42,9 +42,9 @@ const Home = () => {
             <h1>Welcome!</h1>
             <div>
                 <Card dispatch={dispatch} dataToEdit={dataToEdit} toggleModal={toggleModal}/>
-                <hr/>
-                {state.cards.length > 0 && <CardList cards={state.cards} handleEdit={handleEdit} dispatch={dispatch}/>}
             </div>
+            <hr/>
+            {state.cards.length > 0 && <CardList cards={state.cards} handleEdit={handleEdit} dispatch={dispatch}/>}
             <Modal show={showModal} onClose={toggleModal} dispatch={dispatch}>
                 <Card dispatch={dispatch} dataToEdit={dataToEdit} toggleModal={toggleModal}/>
             </Modal>

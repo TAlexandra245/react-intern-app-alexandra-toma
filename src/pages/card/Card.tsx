@@ -2,13 +2,13 @@ import React, {ChangeEvent, FC, FormEvent, useState} from "react";
 import {Action, CardData} from "pages/card/cardReducer";
 import './card.css'
 
-interface ContactFormProps {
+interface CardFormProps {
     dispatch: React.Dispatch<Action>;
     dataToEdit: CardData | undefined;
     toggleModal: () => void;
 }
 
-const Card: FC<ContactFormProps> = ({dispatch, dataToEdit, toggleModal}) => {
+const Card: FC<CardFormProps> = ({dispatch, dataToEdit, toggleModal}) => {
 
     const [cards, setCards] = useState<CardData[]>([]);
     const [card, setCard] = useState<{
@@ -19,13 +19,11 @@ const Card: FC<ContactFormProps> = ({dispatch, dataToEdit, toggleModal}) => {
         description: dataToEdit?.description ? dataToEdit?.description : ''
     })
 
-
-    console.log(card);
-
     function handleOnChange(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
         const formData = new FormData(event.target as HTMLFormElement);
+
         setCard({
             title: formData.get('title') as string,
             description: formData.get('description') as string,
@@ -69,7 +67,7 @@ const Card: FC<ContactFormProps> = ({dispatch, dataToEdit, toggleModal}) => {
 
     return (
         <div>
-            <form onSubmit={handleOnChange}>
+            <form onSubmit={handleOnChange} style = {{display: 'flex', flexDirection:'column', maxWidth: '300px', justifyContent: 'center'}}>
                 <div>
                     <label htmlFor="title">Title: </label>
                     <input
@@ -77,6 +75,7 @@ const Card: FC<ContactFormProps> = ({dispatch, dataToEdit, toggleModal}) => {
                         id="title"
                         name="title"
                         value={card.title}
+                        maxLength={25}
                         onChange={handleInputChange}
                         required
                     />
@@ -86,12 +85,14 @@ const Card: FC<ContactFormProps> = ({dispatch, dataToEdit, toggleModal}) => {
                     <textarea
                         id="description"
                         name="description"
+                        style = {{resize: 'none'}}
                         value={card.description}
+                        maxLength = {255}
                         onChange={handleInputChange}
                         required
                     />
                 </div>
-                <button type="submit">  {dataToEdit ? 'Update Contact' : 'Add Contact'} </button>
+                <button type="submit">  {dataToEdit ? 'Update Card' : 'Add Card'} </button>
             </form>
         </div>
     )

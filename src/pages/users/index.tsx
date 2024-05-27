@@ -61,11 +61,19 @@ const Users = () => {
     }, [pageToGet, gender]);
 
     if (isLoading)
-        return <div> Loading...</div>
+        return <div className={styles.loading}> Loading...</div>
 
     return (
-        <div className={styles.userPanel}>
-            <div>
+        <div>
+            <div style={{
+                position: 'relative',
+                display: 'flex',
+                justifyContent: "center",
+                marginTop: '5px',
+                marginBottom: '5px',
+                gap: '10px',
+                alignItems: 'center'
+            }}>
                 Users
                 <select
                     id="gender"

@@ -1,8 +1,6 @@
-import React, {createContext, FC, useContext, useEffect, useState} from 'react';
-import {Action, CardData, State} from "pages/card/cardReducer";
+import React, {FC} from 'react';
+import {Action, CardData} from "pages/card/cardReducer";
 import './card.css'
-import Modal from "pages/modal/Modal";
-import Card from "pages/card/Card";
 import CardItem from "pages/card/CardItem";
 
 interface CardListProps {
@@ -15,7 +13,7 @@ const CardList: FC<CardListProps> = ({cards, handleEdit, dispatch}) => {
 
 
     return (
-        <div style={{display: 'flex', gap: '20px', flexWrap: 'wrap'}}>
+        <div style={{display: 'flex', gap: '15px', flexWrap: 'wrap', padding: '10px', borderRadius: '10px'}}>
             {cards.map((card) => (
                 <CardItem key={card.id} {...card} handleEdit={handleEdit}
                           dispatch={dispatch}/>
